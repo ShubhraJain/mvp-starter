@@ -12,7 +12,7 @@ db.once('open', function() {
 });
 
 var taskSchema = mongoose.Schema({
-  task: String
+  task: String,
   state: Boolean,
 });
 
@@ -28,4 +28,36 @@ var selectAll = function(callback) {
   });
 };
 
+var addTask = function(task, callback) {
+  Task.create(task, function(err, task) {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, task);
+    }
+  });
+};
+
+var updateTask = function(task, callback) {
+  entry = {
+    task: task
+  }
+  Task.findOneAndUpdate({task: task}, entry, {upsert: true, new: true}, function(err, result) {
+    if (err) {
+      console.log('Error while updating the document', err);
+    }
+  });
+};
+
+var deleteTask = function(callback) {
+  Task.remove({task: task}, function(err, result) {
+    if (err) {
+      console.log('Error while removing a document', err);
+    }
+  });
+};
+
 module.exports.selectAll = selectAll;
+module.exports.addTask = addTask;
+module.exports.updateTask = updateTask;
+module.exports.delete = deleteTask;
