@@ -14,20 +14,41 @@ app.get('/tasks', function (req, res) {
     if(err) {
       res.status(500);
     } else {
-      // console.log('inside server/index.js');
       res.status(200).json(data);
     }
   });
 });
 
 app.post('/delete', function(req, res) {
-  console.log(req);
-  // tasks.deleteTask()
+  tasks.deleteTask(req.body.task, function(err, data) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).json(data);
+    }
+  });
 });
 
-app.post('/update', function(req, res) {
-
+app.post('/updateTask', function(req, res) {
+  tasks.updateTask(req.body.task, req.body.newTask, function(err, data) {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).json(data);
+    }
+  });
 });
+
+app.post('/updateStatus', function(req, res) {
+  tasks.updateStatus(req.body, function(err, data) {
+    if(err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).json(data);
+    }
+  });
+
+})
 
 app.post('/add', function(req, res) {
   tasks.addTask(req.body, function(err, data) {

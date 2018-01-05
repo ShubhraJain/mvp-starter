@@ -19,13 +19,7 @@ var taskSchema = mongoose.Schema({
 var Task = mongoose.model('Task', taskSchema);
 
 var selectAll = function(callback) {
-  Task.find({}, function(err, tasks) {
-    if(err) {
-      callback(err, null);
-    } else {
-      callback(null, tasks);
-    }
-  });
+  Task.find({}, callback);
 };
 
 var addTask = function(task, callback) {
@@ -39,23 +33,23 @@ var addTask = function(task, callback) {
   });
 };
 
-var updateTask = function(task, callback) {
-  Task.findOneAndUpdate({task: task}, entry, {upsert: true, new: true}, function(err, result) {
-    if (err) {
-      console.log('Error while updating the document', err);
-    }
-  });
+var updateTask = function(oldTask, newTask, callback) {
+  var entry = {
+    task: newTask
+  };
+  Task.findOneAndUpdate({task: oldTask}, entry, {upsert: true, new: true}, callback);
+};
+
+var updateStatus = function(task, callback) {
+  Task.findOneAndUpdate({task: task.task}, task, {upsert: true}, callback);
 };
 
 var deleteTask = function(task, callback) {
-  Task.remove({task: task}, function(err, result) {
-    if (err) {
-      console.log('Error while removing a document', err);
-    }
-  });
+  Task.remove({task: task}, callback);
 };
 
 module.exports.selectAll = selectAll;
 module.exports.addTask = addTask;
 module.exports.updateTask = updateTask;
 module.exports.deleteTask = deleteTask;
+module.exports.updateStatus = updateStatus;

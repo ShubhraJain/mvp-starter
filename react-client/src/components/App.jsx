@@ -4,22 +4,11 @@ import CreateTodo from './CreateTodo.jsx';
 import _ from 'lodash';
 import $ from 'jquery';
 
-const todos = [
-  {
-    task: 'Groceries',
-    isCompleted: false
-  },
-  {
-    task: 'Laundry',
-    isCompleted: true
-  }
-]
-
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = { 
-      todos: todos
+      todos: []
     }
   }
 
@@ -28,13 +17,6 @@ class App extends React.Component {
   }
 
   createTask(task) {
-    // this.state.todos.push({
-    //   task: task, 
-    //   isCompleted: false
-    // });
-    // this.setState({
-    //   todos: this.state.todos
-    // });
     $.ajax({
       url: '/add',
       method: 'POST',
@@ -58,28 +40,45 @@ class App extends React.Component {
       todo.task === task
     );
     foundTodo.isCompleted = !foundTodo.isCompleted;
-    this.setState({
-      todos: this.state.todos
+  
+    $.ajax({
+      url: '/updateStatus',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        task: task,
+        isCompleted: foundTodo.isCompleted
+      }),
+      success: () => {
+        this.getTasks();
+      },
+      error: (err) => {
+        console.log('Error while updating status of task', err);
+      }
     });
   }
 
   saveTask(oldTask, newTask) {
-    const foundTodo = this.state.todos.find((todo) => 
-      todo.task === oldTask
-    );
-    foundTodo.task = newTask;
-    this.setState({
-      todos: this.state.todos
+    
+    $.ajax({
+      url: '/updateTask',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        task: oldTask,
+        newTask: newTask
+      }),
+      success: () => {
+        this.getTasks()
+      },
+      error: (err) => {
+        console.log('Error while updating the task', err);
+      }
     });
   }
 
   deleteTask(taskToBeDeleted) {
-    _.remove(this.state.todos, todo => 
-      todo.task === taskToBeDeleted
-    );
-    this.setState({
-      todos: this.state.todos
-    });
+    
     $.ajax({
       url: '/delete',
       method: 'POST',
