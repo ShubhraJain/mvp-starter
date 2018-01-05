@@ -2,6 +2,7 @@ import React from 'react';
 import TodosList from './TodosList.jsx';
 import CreateTodo from './CreateTodo.jsx';
 import _ from 'lodash';
+import $ from 'jquery';
 
 const todos = [
   {
@@ -13,6 +14,7 @@ const todos = [
     isCompleted: true
   }
 ]
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -21,18 +23,34 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-    
+  componentWillMount() {
+    this.getTasks();
   }
 
   createTask(task) {
-    this.state.todos.push({
-      task: task, 
-      isCompleted: false
+    // this.state.todos.push({
+    //   task: task, 
+    //   isCompleted: false
+    // });
+    // this.setState({
+    //   todos: this.state.todos
+    // });
+    $.ajax({
+      url: '/add',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        task: task,
+        isCompleted: false
+      }),
+      success: () => {
+        this.getTasks()
+      },
+      error: (err) => {
+        console.log('error inside ajax call while creating task: ', err);
+      }
     })
-    this.setState({
-      todos: this.state.todos
-    })
+
   }
 
   toggleTask(task) {
@@ -62,6 +80,36 @@ class App extends React.Component {
     this.setState({
       todos: this.state.todos
     });
+    $.ajax({
+      url: '/delete',
+      method: 'POST',
+      contentType: 'application/json',
+      data: JSON.stringify({
+        task: taskToBeDeleted
+      }),
+      success: () => {
+        this.getTasks()
+      },
+      error: (err) => {
+        console.log('error inside ajax call while deleting task: ', err);
+      }
+    });
+  }
+
+  getTasks() {
+    $.ajax({
+      url: '/tasks',
+      method: 'GET',
+      contentType: 'application/json',
+      success: (data) => {
+        this.setState({
+          todos: data
+        })
+      },
+      error: (err) => {
+        console.log('error inside ajax call while getting data');
+      }
+    })
   }
 
   render () {

@@ -29,19 +29,18 @@ var selectAll = function(callback) {
 };
 
 var addTask = function(task, callback) {
-  Task.create(task, function(err, task) {
-    if (err) {
-      callback(err, null);
-    } else {
-      callback(null, task);
-    }
-  });
+  // Task.create(task, function(err, task) {
+  //   if (err) {
+  //     callback(err, null);
+  //   } else {
+  //     callback(null, task);
+  //   }
+  // });
+
+  Task.create(task, callback);
 };
 
 var updateTask = function(task, callback) {
-  entry = {
-    task: task
-  }
   Task.findOneAndUpdate({task: task}, entry, {upsert: true, new: true}, function(err, result) {
     if (err) {
       console.log('Error while updating the document', err);
@@ -49,7 +48,7 @@ var updateTask = function(task, callback) {
   });
 };
 
-var deleteTask = function(callback) {
+var deleteTask = function(task, callback) {
   Task.remove({task: task}, function(err, result) {
     if (err) {
       console.log('Error while removing a document', err);
@@ -60,4 +59,4 @@ var deleteTask = function(callback) {
 module.exports.selectAll = selectAll;
 module.exports.addTask = addTask;
 module.exports.updateTask = updateTask;
-module.exports.delete = deleteTask;
+module.exports.deleteTask = deleteTask;

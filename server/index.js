@@ -1,23 +1,42 @@
 var express = require('express');
 var bodyParser = require('body-parser');
-// UNCOMMENT THE DATABASE YOU'D LIKE TO USE
 var tasks = require('../database-mongo');
 
 var app = express();
 
-// UNCOMMENT FOR REACT
 app.use(express.static(__dirname + '/../react-client/dist'));
 
-// UNCOMMENT FOR ANGULAR
-// app.use(express.static(__dirname + '/../angular-client'));
-// app.use(express.static(__dirname + '/../node_modules'));
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.get('/tasks', function (req, res) {
   tasks.selectAll(function(err, data) {
     if(err) {
-      res.sendStatus(500);
+      res.status(500);
     } else {
-      res.json(data);
+      console.log('inside server/index.js');
+      res.status(200).json(data);
+    }
+  });
+});
+
+app.post('/delete', function(req, res) {
+  console.log(req);
+  // tasks.deleteTask()
+});
+
+app.post('/update', function(req, res) {
+
+});
+
+app.post('/add', function(req, res) {
+  console.log(req.body);
+  tasks.addTask(req.body, function(err, data) {
+    if (err) {
+      console.log('error adding task: ',err)
+      res.status(500).send(err);
+    } else {
+      res.status(200).json(data);
     }
   });
 });
