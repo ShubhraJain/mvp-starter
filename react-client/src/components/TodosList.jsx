@@ -13,6 +13,7 @@ class TodosList extends React.Component {
         isCompleted={todo.isCompleted}
         toggleTask={this.props.toggleTask}
         saveTask={this.props.saveTask}
+        deleteTask={this.props.deleteTask}
       />
     )
   }

@@ -1,6 +1,7 @@
 import React from 'react';
 import TodosList from './TodosList.jsx';
 import CreateTodo from './CreateTodo.jsx';
+import _ from 'lodash';
 
 const todos = [
   {
@@ -54,6 +55,15 @@ class App extends React.Component {
     });
   }
 
+  deleteTask(taskToBeDeleted) {
+    _.remove(this.state.todos, todo => 
+      todo.task === taskToBeDeleted
+    );
+    this.setState({
+      todos: this.state.todos
+    });
+  }
+
   render () {
     return (
       <div>
@@ -63,6 +73,7 @@ class App extends React.Component {
           todos={this.state.todos}
           toggleTask={this.toggleTask.bind(this)}
           saveTask={this.saveTask.bind(this)}
+          deleteTask={this.deleteTask.bind(this)}
         />
       </div>
     )
