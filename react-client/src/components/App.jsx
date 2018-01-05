@@ -1,5 +1,6 @@
 import React from 'react';
-import TodosList from './TodosList.jsx'
+import TodosList from './TodosList.jsx';
+import CreateTodo from './CreateTodo.jsx';
 
 const todos = [
   {
@@ -23,11 +24,24 @@ class App extends React.Component {
     
   }
 
+  createTask(task) {
+    this.state.todos.push({
+      task: task, 
+      isCompleted: false
+    })
+    this.setState({
+      todos: this.state.todos
+    })
+  }
+
   render () {
     return (
       <div>
         <h1>React ToDos App</h1>
-        <TodosList todos={this.state.todos}/>
+        <CreateTodo createTask={this.createTask.bind(this)}/>
+        <TodosList 
+          todos={this.state.todos}
+        />
       </div>
     )
   }
