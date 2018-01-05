@@ -14,7 +14,7 @@ app.get('/tasks', function (req, res) {
     if(err) {
       res.status(500);
     } else {
-      console.log('inside server/index.js');
+      // console.log('inside server/index.js');
       res.status(200).json(data);
     }
   });
@@ -30,10 +30,8 @@ app.post('/update', function(req, res) {
 });
 
 app.post('/add', function(req, res) {
-  console.log(req.body);
   tasks.addTask(req.body, function(err, data) {
     if (err) {
-      console.log('error adding task: ',err)
       res.status(500).send(err);
     } else {
       res.status(200).json(data);

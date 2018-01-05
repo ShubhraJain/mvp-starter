@@ -13,7 +13,7 @@ db.once('open', function() {
 
 var taskSchema = mongoose.Schema({
   task: String,
-  state: Boolean,
+  isCompleted: Boolean,
 });
 
 var Task = mongoose.model('Task', taskSchema);
@@ -29,15 +29,14 @@ var selectAll = function(callback) {
 };
 
 var addTask = function(task, callback) {
-  // Task.create(task, function(err, task) {
-  //   if (err) {
-  //     callback(err, null);
-  //   } else {
-  //     callback(null, task);
-  //   }
-  // });
-
-  Task.create(task, callback);
+  var newTask = new Task(task);
+  newTask.save( function(err, result) {
+    if (err) {
+      callback(err, null);
+    } else {
+      callback(null, result);
+    }
+  });
 };
 
 var updateTask = function(task, callback) {
