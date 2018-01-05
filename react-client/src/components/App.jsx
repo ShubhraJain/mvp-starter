@@ -9,7 +9,7 @@ const todos = [
   },
   {
     task: 'Laundry',
-    isCompleted: false
+    isCompleted: true
   }
 ]
 class App extends React.Component {
@@ -34,6 +34,16 @@ class App extends React.Component {
     })
   }
 
+  toggleTask(task) {
+    const foundTodo = this.state.todos.find((todo) =>
+      todo.task === task
+    );
+    foundTodo.isCompleted = !foundTodo.isCompleted;
+    this.setState({
+      todos: this.state.todos
+    })
+  }
+
   render () {
     return (
       <div>
@@ -41,6 +51,7 @@ class App extends React.Component {
         <CreateTodo createTask={this.createTask.bind(this)}/>
         <TodosList 
           todos={this.state.todos}
+          toggleTask={this.toggleTask.bind(this)}
         />
       </div>
     )
