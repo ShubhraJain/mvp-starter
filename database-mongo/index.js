@@ -11,19 +11,19 @@ db.once('open', function() {
   console.log('mongoose connected successfully');
 });
 
-var itemSchema = mongoose.Schema({
-  quantity: Number,
-  description: String
+var taskSchema = mongoose.Schema({
+  task: String
+  state: Boolean,
 });
 
-var Item = mongoose.model('Item', itemSchema);
+var Task = mongoose.model('Task', taskSchema);
 
 var selectAll = function(callback) {
-  Item.find({}, function(err, items) {
+  Task.find({}, function(err, tasks) {
     if(err) {
       callback(err, null);
     } else {
-      callback(null, items);
+      callback(null, tasks);
     }
   });
 };
