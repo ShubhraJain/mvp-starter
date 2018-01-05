@@ -45,8 +45,10 @@ class CreateTodo extends React.Component {
 
   validateInput(task) {
     if (!task) {
+      this.refs.newTask.value = '';
       return 'Please enter a task';
     } else if(_.find(this.props.todos, todo => todo.task === task)) {
+      this.refs.newTask.value = '';
       return 'Task already exist';
     } else {
       return null;
